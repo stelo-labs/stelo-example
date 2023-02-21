@@ -17,7 +17,6 @@ import { Stack } from "../../base/Stack";
 import { useHasAssetChangeError } from "../../store";
 import { copy } from "../../copy";
 import { Container } from "../../base/Container";
-import { Recipient } from "../../components/Recipient/Recipient";
 import cloneDeep from "lodash/cloneDeep";
 
 type Response = TransactionResponse | SignatureResponse | undefined;

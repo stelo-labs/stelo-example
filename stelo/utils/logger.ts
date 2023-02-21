@@ -1,5 +1,3 @@
-import LogStore from "./LogStore";
-
 let isDev = false;
 
 try {
@@ -14,7 +12,6 @@ try {
 } catch (err) {}
 
 export const log = (...args: unknown[]) => {
-  LogStore.push(...args);
   if (isDev) {
     // eslint-disable-next-line no-console
     console.log(

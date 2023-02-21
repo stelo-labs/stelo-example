@@ -15,6 +15,9 @@ import { create } from "zustand";
 import { fetcher } from "./fetch";
 import { ANALYTICS_EVENT_URL, SIGNATURE_URL, TRANSACTION_URL } from "./urls";
 
+// TOGGLE ANALYTICS
+const SEND_EVENTS = false;
+
 const VIEWS = [
   "TRANSACTION",
   "SIGNATURE",
@@ -98,6 +101,7 @@ export const useViewStore = create<ViewStore>((set, get) => ({
     properties?: Object,
     metadata?: ExtensionMetadata
   ) => {
+    if (!SEND_EVENTS) return;
     const { request, data, errorTracking, extensionMetadata, dappUrl } = get();
     fetcher<AnalyticsRequest, boolean>(
       ANALYTICS_EVENT_URL,

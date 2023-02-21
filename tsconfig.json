@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "paths": {
+      "shared_types": ["../stelo/shared_types/index.ts"],
+      "uiv2/*": ["../stelo/uiv2/*"],
+      "utils": ["../stelo/utils/index.ts"],
+      "utils/*": ["../stelo/utils/*"],
+    }
+  },
+  "include": [".", "../stelo"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+
+}

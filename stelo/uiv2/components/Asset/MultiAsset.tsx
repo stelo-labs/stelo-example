@@ -12,7 +12,7 @@ import {
   Direction,
   DirectionRow,
   FloorPrice,
-  formatTokenName,
+  formatNFTTokenName,
   MaybeLink,
 } from "./Shared";
 import { useDirectionRowStore } from "./Store";
@@ -61,7 +61,7 @@ const ERC721AssetRow = ({ change }: { change: AssetChange }) => {
     <AssetRow badge={MaybeBadgeLink}>
       <MaybeLink href={change.asset.openseaUrl}>
         <Text size="1x" weight="600">
-          {formatTokenName(change)}
+          {formatNFTTokenName(change)}
         </Text>
       </MaybeLink>
       <CollectionName change={change} size="sm" />

@@ -5,6 +5,7 @@ import {
   globalFontFace,
 } from "@vanilla-extract/css";
 import "./reset.css";
+
 const getVarNames = (object: Record<string, any>, prefix: string = "") => {
   return Object.keys(object).reduce((acc: Record<string, string>, value) => {
     acc[value] = prefix + value;

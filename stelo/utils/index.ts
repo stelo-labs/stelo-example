@@ -50,7 +50,7 @@ export const formatAmount = (amount: number | null) => {
     return `${toFixedWithoutZeroes(
       amount / 1_000_000_000_000
     ).toLocaleString()}T`;
-  return "Unlimited";
+  return "All";
 };
 
 export const formatNumber = (amount: number | null) => {

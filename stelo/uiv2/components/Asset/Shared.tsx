@@ -1,7 +1,6 @@
 import { AssetChange, type TokenType } from "shared_types";
 import clsx from "clsx";
 import React from "react";
-import { formatAmount } from "utils";
 import { Container } from "../../base/Container";
 import ExternalLinkIcon from "../../base/ExternalLinkIcon";
 import { Media } from "../../base/Media";
@@ -134,8 +133,6 @@ export const CollectionName = ({
 
 /**
  * Wrap children in Link if href is valid
- * @param param0
- * @returns
  */
 export const MaybeLink: FC<{
   href?: string | undefined | null;
@@ -152,9 +149,11 @@ export const MaybeLink: FC<{
   );
 };
 
-export const formatTokenName = (change: AssetChange) => {
+export const formatNFTTokenName = (change: AssetChange) => {
   if (!!change.asset.tokenId) {
-    return `${change.asset.symbol} #${parseInt(change.asset.tokenId, 16)}`;
+    return `${
+      !!change.asset.symbol ? change.asset.symbol : "Token"
+    } #${parseInt(change.asset.tokenId, 16)}`;
   }
 };
 

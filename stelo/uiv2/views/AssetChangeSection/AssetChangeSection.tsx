@@ -9,14 +9,12 @@ import { AssetChangeComponent } from "../../components/Asset/Asset";
 import { directionRowChildren } from "../../components/Asset/asset.css";
 import Question from "../../components/RiskDisplay/Question";
 import { Row } from "../../base/Row";
-import {
-  assetChangeSection,
-  simulateAssetChangeError,
-} from "./AssetChangeSection.css";
+import { simulateAssetChangeError } from "./AssetChangeSection.css";
 import { Stack } from "../../base/Stack";
 import { useHasAssetChangeError } from "../../store";
 import { copy } from "../../copy";
 import { Container } from "../../base/Container";
+import { Recipient } from "../../components/Recipient/Recipient";
 import cloneDeep from "lodash/cloneDeep";
 
 type Response = TransactionResponse | SignatureResponse | undefined;
@@ -165,10 +163,23 @@ const aggregateFungibleAssetChanges = (
 export const getApprovalAssetChanges = (changes: AssetChange[]) => {
   return aggregateFungibleAssetChanges(
     changes.filter(
-      (change) => change.type === "APPROVE" || change.type === "APPROVE_ALL"
+      (change) =>
+        (change.type === "APPROVE" || change.type === "APPROVE_ALL") &&
+        change.asset.amount !== "0"
     )
   );
 };
+
+export const getRevokeAssetChanges = (changes: AssetChange[]) => {
+  return aggregateFungibleAssetChanges(
+    changes.filter(
+      (change) =>
+        (change.type === "APPROVE" || change.type === "APPROVE_ALL") &&
+        change.asset.amount === "0"
+    )
+  );
+};
+
 export const getSendingAssetChanges = (changes: AssetChange[]) => {
   return aggregateFungibleAssetChanges(
     changes.filter((change) => change.type === "TRANSFER_OUT")
@@ -198,11 +209,12 @@ export const AssetChangeSection = ({
 }) => {
   const hasAssetChangeError = useHasAssetChangeError();
   const approvals = getApprovalAssetChanges(response.assetChanges);
+  const revokes = getRevokeAssetChanges(response.assetChanges);
   const sending = getSendingAssetChanges(response.assetChanges);
   const receiving = getReceivingAssetChanges(response.assetChanges);
   const recipients = getRecipients(response.assetChanges);
   return (
-    <div className={assetChangeSection}>
+    <>
       {hasAssetChangeError && <UnableToSimulate />}
 
       {approvals.length > 0 && (
@@ -210,6 +222,13 @@ export const AssetChangeSection = ({
           title={getOutgoingVerb(response)}
           direction="out"
           assetChanges={approvals}
+        />
+      )}
+      {revokes.length > 0 && (
+        <ChangeAndTitle
+          title={getOutgoingVerb(response)}
+          direction="in"
+          assetChanges={revokes}
         />
       )}
       {sending.length > 0 && (
@@ -227,6 +246,7 @@ export const AssetChangeSection = ({
           assetChanges={receiving}
         />
       )}
-    </div>
+      {recipients.length > 0 && <Recipient recipients={recipients}></Recipient>}
+    </>
   );
 };

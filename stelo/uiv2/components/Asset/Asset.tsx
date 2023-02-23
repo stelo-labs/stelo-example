@@ -43,13 +43,17 @@ const NFTAssetRow = ({ change }: { change: AssetChange }) => {
 };
 
 const ERC20AssetRow = ({ change }: { change: AssetChange }) => {
+  const valueLabel =
+    change.type === "APPROVE" || change.type === "APPROVE_ALL"
+      ? "Value at risk: "
+      : "Value: ";
   return (
     <div>
       <HeaderText>
         {formatAmountForType(change)} {formatSymbol(change.asset)}
       </HeaderText>
       <HeaderSubtext>
-        Value:{" "}
+        {valueLabel}
         <Text as="span" weight="500">
           {FormatAssetWithOptionalDollarSign(change)}
         </Text>

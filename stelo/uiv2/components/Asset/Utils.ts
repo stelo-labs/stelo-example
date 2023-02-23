@@ -10,8 +10,8 @@ const prependAmountString = (amountStr: string) => {
 };
 
 export const FormatAssetWithOptionalDollarSign = (change: AssetChange) => {
-  const ret = formatValue(change);
-  return prependAmountString(ret);
+  const valueStr = formatValue(change);
+  return prependAmountString(valueStr);
 };
 
 export const formatAmountWithOptionalDollarSign = (amount: number) => {
@@ -22,6 +22,12 @@ export const formatAmountForType = (change: AssetChange) => {
   let type = change.asset.type;
   let amount = Number(change.asset.formattedAmount);
   if (change.type === "APPROVE_ALL") return "All";
+  if (
+    type === "ERC20" &&
+    change.type === "APPROVE" &&
+    change.asset.amount === "0"
+  )
+    return "All";
   if (type === "ERC20" || type == "NATIVE") return formatAmount(amount);
   return amount;
 };
@@ -54,6 +60,14 @@ export const formatFloorPrice = (change: AssetChange) => {
 
 export const formatValue = (change: AssetChange) => {
   if (!change.asset.priceUsd) return "Unknown";
+  if (change.type === "APPROVE" || change.type === "APPROVE_ALL")
+    return `${formatAmount(
+      change.asset.priceUsd *
+        Math.min(
+          Number(change.asset.formattedAmount),
+          Number(change.asset.formattedOwnedAmount)
+        )
+    )}`;
   return `${formatAmount(
     change.asset.priceUsd * Number(change.asset.formattedAmount)
   )}`;

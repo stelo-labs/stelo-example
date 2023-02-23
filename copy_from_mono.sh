@@ -24,9 +24,34 @@ rsync -av --exclude "node_modules" \
         ../mono/ ./stelo
 
 mv stelo/packages/* ./stelo 
-rm -rf stelo/packages
 
-rm stelo/package.json \
+# Stash QuestionMark
+mv stelo/uiv2/components/RiskDisplay/Question.tsx tmp_Question.tsx
+mv stelo/uiv2/views/AssetChangeSection tmp_AssetChangeSection
+mv stelo/uiv2/views/ContractCallSection tmp_contractCallSection
+
+rm -rf \
+ stelo/packages \
+ stelo/uiv2/components/Disclaimer \
+ stelo/uiv2/components/Footer \
+ stelo/uiv2/components/Nav \
+ stelo/uiv2/components/RiskDisplay \
+ stelo/uiv2/components/RiskDisplay \
+ stelo/uiv2/components/TypedData \
+ stelo/uiv2/layout \
+ stelo/uiv2/views \
+#  stelo/uiv2/components/DataTable \
+#  stelo/uiv2/components/Recipient \
+
+# put QuestionMark back
+mkdir -p stelo/uiv2/components/RiskDisplay
+mkdir -p stelo/uiv2/views
+mv tmp_Question.tsx stelo/uiv2/components/RiskDisplay/Question.tsx
+mv tmp_AssetChangeSection stelo/uiv2/views/AssetChangeSection
+mv tmp_contractCallSection stelo/uiv2/views/ContractCallSection
+
+rm \
+ stelo/uiv2/App.tsx \
  stelo/**/package.json \
  stelo/*.md \
  stelo/*.json \
@@ -34,7 +59,10 @@ rm stelo/package.json \
  stelo/.eslintrc.js \
  stelo/.gitignore \
  stelo/.prettierrc \
- stelo/**/tsconfig.json
+ stelo/**/tsconfig.json \
+ stelo/uiv2/index.ts
+
+
 
 
 # flatten pkg.json

@@ -3,11 +3,8 @@ import "uiv2/css/globalStyles.css";
 import "uiv2/css/themeContract.css";
 import { AssetChangeSection } from "uiv2/views/AssetChangeSection/AssetChangeSection";
 import { useEnrichRequest } from "uiv2/store";
-import { exampleTxs } from "./exampleTxs";
-import React from "react";
 
 const exampleRequest = {
-  rpcRequestId: "optional-id",
   method: "eth_sendTransaction",
   params: [
     {
@@ -20,25 +17,9 @@ const exampleRequest = {
 };
 
 function App() {
-  const [exampleTx, setExampleTxs] =
-    React.useState<keyof typeof exampleTxs>("sendNFTToScharf");
-  const { loading, data } = useEnrichRequest(exampleTxs[exampleTx]);
+  const { loading, data } = useEnrichRequest(exampleRequest);
   return (
     <div className="App">
-      <select
-        defaultValue={exampleTx}
-        onChange={(e) => {
-          setExampleTxs(e.target.value as keyof typeof exampleTxs);
-        }}
-      >
-        {Object.keys(exampleTxs).map((key) => {
-          return (
-            <option key={key} value={key}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
       {loading && <div>Loading...</div>}
       {!loading && !!data && <AssetChangeSection response={data} />}
     </div>

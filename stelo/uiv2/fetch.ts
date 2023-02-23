@@ -11,10 +11,7 @@ export function fetcher<R, T>(
 ) {
   // Create new instance otherwise apiKey keeps appending
   const _url = new URL(url.toString());
-  //@ts-ignore
-  if (API_KEY !== "") {
-    _url.searchParams.append("apiKey", API_KEY);
-  }
+  _url.searchParams.append("apiKey", API_KEY);
   let metatadataHeaders = {};
   if (!!extensionMetadata)
     metatadataHeaders = {
@@ -22,7 +19,7 @@ export function fetcher<R, T>(
       "stelo-rpc-request-id": extensionMetadata.rpcRequestId,
       "stelo-device-id": extensionMetadata.deviceId,
     };
-  return fetch(url, {
+  return fetch(_url, {
     method: "POST",
     mode: "cors",
     headers: {

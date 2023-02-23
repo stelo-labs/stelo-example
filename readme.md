@@ -2,8 +2,8 @@
 
 ## Getting started
 
-- `git clone ...`
-- `cd waymont-handoff`
+- `git clone git@github.com:stelo-labs/waymont-handoff.git stelo-example`
+- `cd stelo-example`
 - `yarn` (install dependencies)
 - open up `stelo/uiv2/fetch.ts` and make sure the API_KEY variable is assigned to the API key provided to you.
 - `yarn dev`(start server on port 5173)

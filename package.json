@@ -1,5 +1,5 @@
 {
-  "name": "waymont-handoff",
+  "name": "stelo-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vite-tsconfig-paths": "^4.0.5",
-    "// You will need to add the below dependencies to your projects package.json": "",
+    "//": "You will need to add the below devDependencies to your projects package.json",
     "@ethersproject/bignumber": "^5.7.0",
     "@radix-ui/react-aspect-ratio": "^1.0.1",
     "@vanilla-extract/css": "^1.9.5",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "vite": "^4.1.0",
     "@vitejs/plugin-react": "^3.1.0",
-    "// You will need to add the below devDependencies to your projects package.json": "",
+    "//": "You will need to add the below devDependencies to your projects package.json",
     "@types/uuid": "^9.0.0",
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.27",

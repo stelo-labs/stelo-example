@@ -5,6 +5,7 @@
 - `git clone ...`
 - `cd waymont-handoff`
 - `yarn` (install dependencies)
+- open up `stelo/uiv2/fetch.ts` and make sure the API_KEY variable is assigned to the API key provided to you.
 - `yarn dev`(start server on port 5173)
 
 # Integration
@@ -23,9 +24,18 @@
 
 ```
 
-# TODO
+- We expose a hook to quickly call our API from React. `import { useEnrichRequest } from "uiv2/store";`
+- The entry point to our `AssetChangeSection` is exposed from `import { AssetChangeSection } from "uiv2/views/AssetChangeSection/AssetChangeSection";`
+- Integration could be as simple as `src/App.tsx`
 
-- [x] Handle .env key
-- [x] Hit correct route in fetcher
-- [x] Disable analytics
-- [ ] Add your API
+```
+function App() {
+  const { loading, data } = useEnrichRequest(exampleRequest);
+  return (
+    <div>
+      {loading && <div>Loading...</div>}
+      {!loading && data && <AssetChangeSection response={data} />}
+    </div>
+  );
+}
+```

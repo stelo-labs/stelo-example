@@ -13,7 +13,12 @@ import {
 } from "shared_types";
 import { create } from "zustand";
 import { fetcher } from "./fetch";
-import { ANALYTICS_EVENT_URL, SIGNATURE_URL, TRANSACTION_URL } from "./urls";
+import {
+  ANALYTICS_EVENT_URL,
+  config,
+  SIGNATURE_URL,
+  TRANSACTION_URL,
+} from "./config";
 
 const VIEWS = [
   "TRANSACTION",
@@ -98,6 +103,7 @@ export const useViewStore = create<ViewStore>((set, get) => ({
     properties?: Object,
     metadata?: ExtensionMetadata
   ) => {
+    if (!config.analyticsEnabled) return;
     const { request, data, errorTracking, extensionMetadata, dappUrl } = get();
     fetcher<AnalyticsRequest, boolean>(
       ANALYTICS_EVENT_URL,

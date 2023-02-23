@@ -8,7 +8,7 @@ export type EthersRequest = {
 export interface SteloRequest extends EthersRequest {
   userAddress?: string | null;
   blockNumber?: number;
-  rpcRequestId: string;
+  rpcRequestId?: string;
 }
 
 export const signMethods = [

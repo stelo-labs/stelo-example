@@ -1,6 +1,7 @@
 import { ExtensionMetadata } from "./store";
 
-const API_KEY = "AtoJBOzp1HobmDvATQtMZ.9f";
+// Will expose this via a top-level React Context in the future
+const API_KEY = "REPLACE_THIS_WITH_YOUR_API_KEY";
 
 // Does not do any actual schema validation
 export function fetcher<R, T>(
@@ -8,7 +9,8 @@ export function fetcher<R, T>(
   data: R,
   extensionMetadata?: ExtensionMetadata
 ) {
-  const _url = new URL(url);
+  // Create new instance otherwise apiKey keeps appending
+  const _url = new URL(url.toString());
   //@ts-ignore
   if (API_KEY !== "") {
     _url.searchParams.append("apiKey", API_KEY);
@@ -20,7 +22,7 @@ export function fetcher<R, T>(
       "stelo-rpc-request-id": extensionMetadata.rpcRequestId,
       "stelo-device-id": extensionMetadata.deviceId,
     };
-  return fetch(_url, {
+  return fetch(url, {
     method: "POST",
     mode: "cors",
     headers: {

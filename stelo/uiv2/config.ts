@@ -1,7 +1,6 @@
-const getEnvVar = (ENV_VAR: string, fallback?: any) => {
-  const env_var = import.meta.env[ENV_VAR];
-  if (typeof env_var !== "undefined") {
-    return env_var;
+const getEnvVar = (ENV_VAR: any, ENV_VAR_NAME: string, fallback?: any) => {
+  if (typeof ENV_VAR !== "undefined") {
+    return ENV_VAR;
   }
   if (typeof fallback === "undefined") {
     throw new Error(`Missing environment variable: ${ENV_VAR}`);
@@ -13,11 +12,24 @@ type Config = {
   analyticsEnabled: boolean;
 };
 
-const apiHost = getEnvVar("STELO_HOST", "https://app.steloapi.com/");
-const versionRoute = getEnvVar("STELO_VERSION_ROUTE", "api/v0/");
+const apiHost = getEnvVar(
+  // Can't do dynamic access with vite
+  import.meta.env.VITE_STELO_HOST,
+  "VITE_STELO_HOST",
+  "https://app.steloapi.com/"
+);
+const versionRoute = getEnvVar(
+  import.meta.env.VITE_STELO_VERSION_ROUTE,
+  "STELO_VERSION_ROUTE",
+  "api/v0/"
+);
 
 export const config: Config = {
-  analyticsEnabled: getEnvVar("ANALYTICS_ENABLED", false),
+  analyticsEnabled: getEnvVar(
+    import.meta.env.VITE_ANALYTICS_ENABLED,
+    "ANALYTICS_ENABLED",
+    false
+  ),
 };
 
 const BASE_URL = new URL(versionRoute, apiHost);

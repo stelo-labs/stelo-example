@@ -18,22 +18,30 @@ const useValidImage = (url: string | undefined | null) => {
   const [valid, setValid] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   React.useEffect(() => {
     if (url === "" || !url) {
       setValid(false);
       setLoading(false);
     } else {
-      setLoading(true);
-      fetch(url)
-        .then(function (resp) {
-          setValid(resp.ok);
-          setLoading(false);
-        })
-        .catch(function () {
-          setValid(false);
-          setLoading(false);
-        });
+      // Define these here so we can cleanup
+      const onLoad = () => {
+        setValid(true);
+        setLoading(false);
+      };
+      const onError = () => {
+        setValid(false);
+        setLoading(false);
+      };
+
+      const img = new Image();
+      img.src = url;
+      img.addEventListener("load", onLoad);
+      img.addEventListener("error", onError);
+
+      return function cleanup() {
+        img.removeEventListener("load", onLoad);
+        img.removeEventListener("error", onError);
+      };
     }
   }, [url, setValid, setLoading]);
 

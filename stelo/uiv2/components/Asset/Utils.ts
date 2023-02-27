@@ -54,7 +54,7 @@ export const formatSymbol = (asset: Asset | undefined) => {
 export const formatFloorPrice = (change: AssetChange) => {
   if (!change.asset.priceNative) return "Unknown";
   return `${formatAmount(change.asset.priceNative)} ETH ($${formatAmount(
-    Number(change.asset.priceUsd) * Number(change.asset.formattedAmount)
+    Number(change.asset.priceUsd)
   )})`;
 };
 

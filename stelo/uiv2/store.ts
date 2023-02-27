@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import {
   isSignMethod,
@@ -12,13 +13,20 @@ import {
   type SteloError,
 } from "shared_types";
 import { create } from "zustand";
-import { fetcher } from "./fetch";
+import { fetcher, OnRetryCtx, withRetry } from "./fetch";
 import {
   ANALYTICS_EVENT_URL,
   config,
   SIGNATURE_URL,
   TRANSACTION_URL,
 } from "./config";
+import UAParser from "ua-parser-js";
+
+let UA = {};
+try {
+  const parser = new UAParser();
+  UA = { ...parser.getResult() };
+} catch (err) {}
 
 const VIEWS = [
   "TRANSACTION",
@@ -113,11 +121,12 @@ export const useViewStore = create<ViewStore>((set, get) => ({
         event,
         properties: {
           request: { method: request?.method, params: request?.params },
-          riskScore: data?.risk.riskScore,
-          riskFactors: data?.risk.riskFactors,
-          runtimeError: errorTracking.runtimeError,
-          apiErrors: errorTracking.apiErrors,
+          riskScore: data?.risk?.riskScore,
+          riskFactors: data?.risk?.riskFactors,
+          runtimeError: errorTracking?.runtimeError,
+          apiErrors: errorTracking?.apiErrors,
           dappUrl,
+          ...UA,
           ...properties,
         },
       },
@@ -137,15 +146,27 @@ export const useViewStore = create<ViewStore>((set, get) => ({
         dappUrl,
       });
       const { createEvent } = get();
+
+      const fireRetryEvent = (ctx: OnRetryCtx) => {
+        createEvent("RETRY", ctx);
+      };
+
+      const fetchWithRetry = <P extends any>(call: () => Promise<P>) => {
+        return withRetry(call, fireRetryEvent);
+      };
+
       createEvent("INITIATED");
+
       if (isTxMethod(request.method)) {
         // Think it would be a good idea to create a Zod resolver for Request types https://github.com/wagmi-dev/abitype#zod
         // Good candidate for OSS
         const tx = request.params?.[0] as unknown as Transaction;
-        const data = await fetcher<TransactionRequest, TransactionResponse>(
-          TRANSACTION_URL,
-          { ...tx, url: dappUrl },
-          extensionMetadata
+        const data = await fetchWithRetry(() =>
+          fetcher<TransactionRequest, TransactionResponse>(
+            TRANSACTION_URL,
+            { ...tx, url: dappUrl },
+            extensionMetadata
+          )
         );
         const unrecoverableErrors = getUnrecoverableErrors(data);
         const hasUnrecoverableError = unrecoverableErrors.length > 0;
@@ -160,10 +181,12 @@ export const useViewStore = create<ViewStore>((set, get) => ({
           params: request.params as string[],
           method: request.method,
         };
-        const data = await fetcher<SignatureRequest, SignatureResponse>(
-          SIGNATURE_URL,
-          { ...sig, url: dappUrl },
-          extensionMetadata
+        const data = await fetchWithRetry(() =>
+          fetcher<SignatureRequest, SignatureResponse>(
+            SIGNATURE_URL,
+            { ...sig, url: dappUrl },
+            extensionMetadata
+          )
         );
         const unrecoverableErrors = getUnrecoverableErrors(data);
         const hasUnrecoverableError = unrecoverableErrors.length > 0;

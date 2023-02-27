@@ -60,7 +60,10 @@ rm \
  stelo/.gitignore \
  stelo/.prettierrc \
  stelo/**/tsconfig.json \
- stelo/uiv2/index.ts
+ stelo/uiv2/index.ts \
+ stelo/uiv2/.babelrc |
+ stelo/uiv2/jest.config.js
+ 
 
 
 
